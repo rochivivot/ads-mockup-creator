@@ -31,7 +31,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
             ad_base_name = Path(ad_file.name).stem
 
             for ss in screenshot_files:
-                base = Image.open(ss).convert("RGB")
+                base = Image.open(ss).convert("RGBA")
                 ss_name = ss.name
                 expected_tuple = expected_size_map.get(ss_name, None)
                 if not expected_tuple:
@@ -43,15 +43,14 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     st.info(f"⚠️ {ss_name} skipped for {ad_base_name} — ad size {ad_w}x{ad_h} doesn't match expected {expected_size[0]}x{expected_size[1]}")
                     continue
 
-                # Scale ad to fill red box (slot) fully
                 resized_ad = ad_img.resize((w, h))
-                base.paste(resized_ad, (x, y), resized_ad)
+                base.alpha_composite(resized_ad, dest=(x, y))
 
                 label = f"{ad_base_name} on {ss_name}"
                 previews.append((label, base))
 
                 buffer = BytesIO()
-                base.save(buffer, format="JPEG")
+                base.convert("RGB").save(buffer, format="JPEG")
                 zipf.writestr(f"mockup_{label}.jpg", buffer.getvalue())
 
     if previews:
