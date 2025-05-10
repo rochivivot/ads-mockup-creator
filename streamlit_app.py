@@ -7,7 +7,7 @@ from pathlib import Path
 
 st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
 st.title("📱 Ad Mockup Creator")
-st.markdown("Upload one ad. Screenshots will be matched automatically from Jampp templates.")
+st.markdown("Upload one or more ads. Screenshots will be matched automatically from Jampp templates.")
 
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
@@ -35,10 +35,10 @@ def detect_red_rectangle(img_np):
     return x1, y1, x2 - x1, y2 - y1
 
 if ad_files and screenshot_files and st.button("Generate Mockups"):
-        previews = []
+    previews = []
     zip_buffer = BytesIO()
     with ZipFile(zip_buffer, "w") as zipf:
-                for ad_file in ad_files:
+        for ad_file in ad_files:
             ad_img = Image.open(ad_file).convert("RGB")
             ad_w, ad_h = ad_img.size
             ad_base_name = Path(ad_file.name).stem
@@ -80,8 +80,9 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 base.save(buffer, format="JPEG")
                 zipf.writestr(f"mockup_{label}.jpg", buffer.getvalue())
 
+    if previews:
+        st.subheader("🔍 Previews")
         for name, img in previews:
-            # Render in iPhone style frame
             frame_margin = 40
             max_preview_width = 360
             scaled_height = int(img.height * max_preview_width / img.width)
