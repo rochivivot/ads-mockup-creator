@@ -12,7 +12,7 @@ st.markdown("Upload one or more ads. Screenshots will be matched automatically f
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
-    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1220, 320, 50)),
+    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1230, 320, 50)),
     "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1210, 320, 50)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (60, 570, 300, 250)),
     "PLAYit": ("playit_sample.jpg", (300, 250), (60, 620, 300, 250))
@@ -43,26 +43,28 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     st.info(f"⚠️ {ss_name} skipped for {ad_base_name} — ad size {ad_w}x{ad_h} doesn't match expected {expected_size[0]}x{expected_size[1]}")
                     continue
 
-                resized_ad = ad_img.resize((w, h))
-                base.alpha_composite(resized_ad, dest=(x, y))
+                debug_base = base.copy()
+                ImageDraw.Draw(debug_base).rectangle([x, y, x + w, y + h], outline="red", width=2)
+                resized_ad = ad_img.resize((w, h), Image.LANCZOS)
+                debug_base.alpha_composite(resized_ad, dest=(x, y))
 
                 label = f"{ad_base_name} on {ss_name}"
-                previews.append((label, base))
+                previews.append((label, debug_base))
 
                 buffer = BytesIO()
-                base.convert("RGB").save(buffer, format="JPEG")
+                debug_base.convert("RGB").save(buffer, format="JPEG")
                 zipf.writestr(f"mockup_{label}.jpg", buffer.getvalue())
 
     if previews:
         st.subheader("🔍 Previews")
         col1, col2 = st.columns(2)
         for i, (name, img) in enumerate(previews):
-            preview_width = 150
+            preview_width = 120
             scaled_height = int(img.height * preview_width / img.width)
             scaled_img = img.resize((preview_width, scaled_height))
 
-            frame = Image.new("RGB", (scaled_img.width + 40, scaled_height + 40), (20, 20, 20))
-            frame.paste(scaled_img, (20, 20))
+            frame = Image.new("RGB", (scaled_img.width + 30, scaled_height + 30), (20, 20, 20))
+            frame.paste(scaled_img, (15, 15))
             (col1 if i % 2 == 0 else col2).image(frame, caption=name, use_container_width=False)
 
         st.subheader("📦 Download All Mockups")
