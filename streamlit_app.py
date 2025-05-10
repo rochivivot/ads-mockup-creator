@@ -70,7 +70,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 resized_ad = ad_img.resize((new_w, new_h))
                 pad_x = x + (w - new_w) // 2
                 pad_y = y + (h - new_h) // 2
-                base.paste(resized_ad, (pad_x, pad_y))
+                base.paste(resized_ad, (pad_x, pad_y), resized_ad if resized_ad.mode == 'RGBA' else None)
 
                 label = f"{ad_base_name} on {ss_name}"
                 previews.append((label, base))
@@ -85,7 +85,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
         for i, (name, img) in enumerate(previews):
             frame_margin = 30
             max_preview_width = 250
-            scaled_height = int(img.height * max_preview_width / img.width)
+            scaled_height = int(img.height * max_preview_width / img.width * 0.75)
             scaled_img = img.resize((max_preview_width, scaled_height))
 
             frame_width = scaled_img.width + 2 * frame_margin
