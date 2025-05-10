@@ -75,16 +75,16 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 label = f"{ad_base_name} on {ss_name}"
                 previews.append((label, base))
 
-                # Save to ZIP
                 buffer = BytesIO()
                 base.save(buffer, format="JPEG")
                 zipf.writestr(f"mockup_{label}.jpg", buffer.getvalue())
 
     if previews:
         st.subheader("🔍 Previews")
-        for name, img in previews:
-            frame_margin = 40
-            max_preview_width = 360
+        col1, col2 = st.columns(2)
+        for i, (name, img) in enumerate(previews):
+            frame_margin = 30
+            max_preview_width = 250
             scaled_height = int(img.height * max_preview_width / img.width)
             scaled_img = img.resize((max_preview_width, scaled_height))
 
@@ -100,7 +100,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
             mask.paste(corner.rotate(270), (frame_width - 20, 0))
             iphone.paste(scaled_img, (frame_margin, frame_margin))
 
-            st.image(iphone, caption=name, use_container_width=True)
+            (col1 if i % 2 == 0 else col2).image(iphone, caption=name, use_container_width=True)
 
         st.subheader("📦 Download All Mockups")
         st.download_button("Download ZIP", data=zip_buffer.getvalue(), file_name="mockups.zip")
