@@ -6,6 +6,14 @@ from io import BytesIO
 from zipfile import ZipFile
 from pathlib import Path
 
+# Define stored paths and expected ad sizes
+stored_paths = {
+    "Sudoku": ("sudoku_sample.jpg", (320, 50)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (300, 50)),
+    "OneFootball": ("onefootball_sample.jpg", (300, 250)),
+    "PLAYit": ("playit_sample.jpg", (300, 250))
+}
+
 # Ensure app uses only Jampp stored screenshots (no upload option)
 screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
 expected_size_map = {Path(f"static/{fname}").name: size for fname, size in stored_paths.values()}
