@@ -18,18 +18,20 @@ mode = st.radio("Select screenshot source", ["Upload screenshots", "Use stored J
 
 # Define stored screenshot paths (pre-loaded on deploy)
 stored_paths = {
-    "Sudoku": "sudoku_sample.jpg",
-    "Weather_Banner": "weather_banner_sample.jpg",
-    "OneFootball": "onefootball_sample.jpg",
-    "PLAYit": "playit_sample.jpg"
+    "Sudoku": ("sudoku_sample.jpg", (320, 50)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (300, 50)),
+    "OneFootball": ("onefootball_sample.jpg", (300, 250)),
+    "PLAYit": ("playit_sample.jpg", (300, 250))
 }
 
 # User uploaded or stored screenshots
 screenshot_files = []
+expected_size_map = {}
 if mode == "Upload screenshots":
     screenshot_files = st.file_uploader("Upload screenshot(s)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 else:
-    screenshot_files = [Path(f"static/{p}") for p in stored_paths.values() if Path(f"static/{p}").exists()]
+    screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
+    expected_size_map = {Path(f"static/{fname}").name: size for fname, size in stored_paths.values()}
 
 # Function: detect red box area
 def detect_red_rectangle(img_np):
@@ -63,20 +65,21 @@ if ad_file and screenshot_files and st.button("Generate Mockups"):
 
             x, y, w, h = rect
 
-            # Only allow ad to be used on slots that match its native size ± tolerance
-            if abs(ad_w - w) > 20 or abs(ad_h - h) > 20:
-                st.info(f"⚠️ {ss.name if hasattr(ss, 'name') else ss.name} skipped — ad size {ad_w}x{ad_h} doesn't match slot {w}x{h}")
+            ss_name = ss.name if hasattr(ss, "name") else ss.name
+            expected = expected_size_map.get(ss_name, None)
+            if expected and (abs(ad_w - expected[0]) > 20 or abs(ad_h - expected[1]) > 20):
+                st.info(f"⚠️ {ss_name} skipped — ad size {ad_w}x{ad_h} doesn't match expected {expected[0]}x{expected[1]}")
                 continue
 
             resized_ad = ad_img.resize((w, h))
             base.paste(resized_ad, (x, y))
 
-            previews.append((ss.name if hasattr(ss, 'name') else ss.name, base))
+            previews.append((ss_name, base))
 
             # Save for zip
             buffer = BytesIO()
             base.save(buffer, format="JPEG")
-            zipf.writestr(f"mockup_{ss.name if hasattr(ss, 'name') else ss.name}.jpg", buffer.getvalue())
+            zipf.writestr(f"mockup_{ss_name}.jpg", buffer.getvalue())
 
     if previews:
         st.subheader("🔍 Previews")
