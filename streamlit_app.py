@@ -1,4 +1,3 @@
-# streamlit_app.py — Ad Mockup Creator (Streamlit Cloud Compatible, no OpenCV)
 import streamlit as st
 from PIL import Image, ImageDraw
 import numpy as np
@@ -8,19 +7,18 @@ from pathlib import Path
 
 st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
 st.title("📱 Ad Mockup Creator")
-st.markdown("Upload one ad and use stored Jampp templates with marked slots.")
+st.markdown("Upload one ad. Screenshots will be matched automatically from Jampp templates.")
 
 # Upload ad input
 ad_file = st.file_uploader("Upload ad image (PNG or JPG)", type=["png", "jpg", "jpeg"])
 
-# Define stored screenshot paths with expected ad sizes
+# Define stored screenshot paths and expected ad sizes
 stored_paths = {
     "Sudoku": ("sudoku_sample.jpg", (320, 50)),
     "Weather_Banner": ("weather_banner_sample.jpg", (300, 50)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250)),
     "PLAYit": ("playit_sample.jpg", (300, 250))
 }
-
 screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
 expected_size_map = {Path(f"static/{fname}").name: size for fname, size in stored_paths.values()}
 
@@ -54,30 +52,4 @@ if ad_file and screenshot_files and st.button("Generate Mockups"):
                 st.warning(f"❌ No red slot found in {ss.name}, skipped.")
                 continue
 
-            x, y, w, h = rect
-
-            ss_name = ss.name
-            expected = expected_size_map.get(ss_name, None)
-            if expected and (abs(ad_w - expected[0]) > 20 or abs(ad_h - expected[1]) > 20):
-                st.info(f"⚠️ {ss_name} skipped — ad size {ad_w}x{ad_h} doesn't match expected {expected[0]}x{expected[1]}")
-                continue
-
-            resized_ad = ad_img.resize((w, h))
-            base.paste(resized_ad, (x, y))
-
-            previews.append((ss_name, base))
-
-            # Save for zip
-            buffer = BytesIO()
-            base.save(buffer, format="JPEG")
-            zipf.writestr(f"mockup_{ss_name}.jpg", buffer.getvalue())
-
-    if previews:
-        st.subheader("🔍 Previews")
-        for name, img in previews:
-            st.image(img, caption=name, use_container_width=True, width=300)
-
-        st.subheader("📦 Download All Mockups")
-        st.download_button("Download ZIP", data=zip_buffer.getvalue(), file_name="mockups.zip")
-    else:
-        st.warning("⚠️ No valid mockups generated.")
+            x, y, w, h =
