@@ -45,9 +45,6 @@ def detect_red_rectangle(img_np):
     x2, y2 = np.max(xs), np.max(ys)
     return x1, y1, x2 - x1, y2 - y1
 
-# Add checkbox to override slot-size matching
-allow_resize = st.checkbox("Allow resizing even if ad size doesn't match slot", value=True)
-
 if ad_file and screenshot_files and st.button("Generate Mockups"):
     ad_img = Image.open(ad_file).convert("RGB")
     ad_w, ad_h = ad_img.size
@@ -65,8 +62,10 @@ if ad_file and screenshot_files and st.button("Generate Mockups"):
                 continue
 
             x, y, w, h = rect
-            if not allow_resize and (abs(ad_w - w) > 15 or abs(ad_h - h) > 15):
-                st.info(f"⚠️ {ss.name if hasattr(ss, 'name') else ss.name} skipped — ad size mismatch with slot ({w}x{h})")
+
+            # Only allow ad to be used on slots that match its native size ± tolerance
+            if abs(ad_w - w) > 20 or abs(ad_h - h) > 20:
+                st.info(f"⚠️ {ss.name if hasattr(ss, 'name') else ss.name} skipped — ad size {ad_w}x{ad_h} doesn't match slot {w}x{h}")
                 continue
 
             resized_ad = ad_img.resize((w, h))
