@@ -43,6 +43,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     st.info(f"⚠️ {ss_name} skipped for {ad_base_name} — ad size {ad_w}x{ad_h} doesn't match expected {expected_size[0]}x{expected_size[1]}")
                     continue
 
+                # Scale ad to fill red box (slot) fully
                 resized_ad = ad_img.resize((w, h))
                 base.paste(resized_ad, (x, y), resized_ad)
 
@@ -57,7 +58,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
         st.subheader("🔍 Previews")
         col1, col2 = st.columns(2)
         for i, (name, img) in enumerate(previews):
-            preview_width = 180
+            preview_width = 150
             scaled_height = int(img.height * preview_width / img.width)
             scaled_img = img.resize((preview_width, scaled_height))
 
