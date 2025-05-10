@@ -4,14 +4,32 @@ from PIL import Image, ImageDraw
 import numpy as np
 from io import BytesIO
 from zipfile import ZipFile
+from pathlib import Path
 
 st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
 st.title("📱 Ad Mockup Creator")
-st.markdown("Upload one ad and any number of screenshots with **red boxes** marking ad slots.")
+st.markdown("Upload one ad and either upload screenshots or use stored Jampp templates.")
 
-# Upload inputs
+# Upload ad input
 ad_file = st.file_uploader("Upload ad image (PNG or JPG)", type=["png", "jpg", "jpeg"])
-screenshot_files = st.file_uploader("Upload screenshot(s)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
+
+# Screenshot source selector
+mode = st.radio("Select screenshot source", ["Upload screenshots", "Use stored Jampp templates"])
+
+# Define stored screenshot paths (pre-loaded on deploy)
+stored_paths = {
+    "Sudoku": "sudoku_sample.jpg",
+    "Weather_Banner": "weather_banner_sample.jpg",
+    "OneFootball": "onefootball_sample.jpg",
+    "PLAYit": "playit_sample.jpg"
+}
+
+# User uploaded or stored screenshots
+screenshot_files = []
+if mode == "Upload screenshots":
+    screenshot_files = st.file_uploader("Upload screenshot(s)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
+else:
+    screenshot_files = [Path(f"static/{p}") for p in stored_paths.values() if Path(f"static/{p}").exists()]
 
 # Function: detect red box area
 def detect_red_rectangle(img_np):
@@ -27,7 +45,7 @@ def detect_red_rectangle(img_np):
     x2, y2 = np.max(xs), np.max(ys)
     return x1, y1, x2 - x1, y2 - y1
 
-if ad_file and screenshot_files:
+if ad_file and screenshot_files and st.button("Generate Mockups"):
     ad_img = Image.open(ad_file).convert("RGB")
     ad_w, ad_h = ad_img.size
 
@@ -40,23 +58,23 @@ if ad_file and screenshot_files:
 
             rect = detect_red_rectangle(base_np)
             if not rect:
-                st.warning(f"❌ No red slot found in {ss.name}, skipped.")
+                st.warning(f"❌ No red slot found in {ss.name if hasattr(ss, 'name') else ss.name}, skipped.")
                 continue
 
             x, y, w, h = rect
             if abs(ad_w - w) > 15 or abs(ad_h - h) > 15:
-                st.info(f"⚠️ {ss.name} skipped — ad size mismatch with slot ({w}x{h})")
+                st.info(f"⚠️ {ss.name if hasattr(ss, 'name') else ss.name} skipped — ad size mismatch with slot ({w}x{h})")
                 continue
 
             resized_ad = ad_img.resize((w, h))
             base.paste(resized_ad, (x, y))
 
-            previews.append((ss.name, base))
+            previews.append((ss.name if hasattr(ss, 'name') else ss.name, base))
 
             # Save for zip
             buffer = BytesIO()
             base.save(buffer, format="JPEG")
-            zipf.writestr(f"mockup_{ss.name}.jpg", buffer.getvalue())
+            zipf.writestr(f"mockup_{ss.name if hasattr(ss, 'name') else ss.name}.jpg", buffer.getvalue())
 
     if previews:
         st.subheader("🔍 Previews")
