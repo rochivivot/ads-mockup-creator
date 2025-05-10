@@ -12,10 +12,10 @@ st.markdown("Upload one or more ads. Screenshots will be matched automatically f
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
-    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1290, 320, 50)),
-    "Weather_Banner": ("weather_banner_sample.jpg", (300, 50), (60, 1210, 320, 50)),
-    "OneFootball": ("onefootball_sample.jpg", (300, 250), (60, 950, 300, 250)),
-    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 850, 300, 250))
+    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1132, 320, 50)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1122, 320, 50)),
+    "OneFootball": ("onefootball_sample.jpg", (300, 250), (60, 570, 300, 250)),
+    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 620, 300, 250))
 }
 
 screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
