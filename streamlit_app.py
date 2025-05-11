@@ -15,9 +15,9 @@ stored_paths = {
     "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1220, 520, 78)),
     "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1292, 530, 85)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (54, 715, 498, 416)),
-    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 600, 600, 550)),
+    "PLAYit": ("playit_sample.jpg", (300, 250), (50, 700, 600, 550)),
     "Weather_300x250": ("weather_300x250_sample.jpg", (300, 250), (60, 730, 300, 250)),
-    "Interstitial": ("interstitial_sample.jpg", (320, 480), (48, 180, 320, 480))
+    "Interstitial": ("interstitial_sample.jpg", (320, 480), (80, 240, 320, 480))
 }
 
 screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
