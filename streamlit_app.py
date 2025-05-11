@@ -15,7 +15,7 @@ stored_paths = {
     "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1220, 520, 78)),
     "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1292, 530, 85)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (54, 715, 498, 416)),
-    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 650, 416, 346)),
+    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 650, 457, 381)),
     "Weather_300x250": ("weather_300x250_sample.jpg", (300, 250), (60, 430, 416, 346)),
     "Interstitial": ("interstitial_sample.jpg", (320, 480), (80, 240, 320, 480))
 }
