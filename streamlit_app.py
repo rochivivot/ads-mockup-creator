@@ -17,7 +17,7 @@ stored_paths = {
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (60, 715, 498, 416)),
     "PLAYit": ("playit_sample.jpg", (300, 250), (35, 580, 450, 375)),
     "Weather_300x250": ("weather_300x250_sample.jpg", (300, 250), (60, 430, 416, 346)),
-    "Interstitial": ("interstitial_sample.jpg", (320, 480), (10, 100, 320, 480))
+    "Interstitial": ("interstitial_sample.jpg", (320, 480), (0, 100, 288, 432))
 }
 
 screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
