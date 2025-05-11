@@ -13,7 +13,7 @@ ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg",
 
 stored_paths = {
     "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1242, 320, 50)),
-    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1242, 320, 50)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1280, 320, 50)),  # updated y-coordinate
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (54, 715, 498, 416)),
     "PLAYit": ("playit_sample.jpg", (300, 250), (60, 600, 300, 250))
 }
@@ -73,13 +73,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
         st.subheader("🔍 Previews")
         col1, col2 = st.columns(2)
         for i, (name, img) in enumerate(previews):
-            preview_width = 120
-            scaled_height = int(img.height * preview_width / img.width)
-            scaled_img = img.resize((preview_width, scaled_height))
-
-            frame = Image.new("RGB", (scaled_img.width + 30, scaled_height + 30), (20, 20, 20))
-            frame.paste(scaled_img, (15, 15))
-            (col1 if i % 2 == 0 else col2).image(frame, caption=name, use_container_width=False)
+            (col1 if i % 2 == 0 else col2).image(img, caption=name, use_container_width=True)
 
         st.subheader("📦 Download All Mockups")
         st.download_button("Download ZIP", data=zip_buffer.getvalue(), file_name="mockups.zip")
