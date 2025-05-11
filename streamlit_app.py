@@ -12,10 +12,10 @@ st.markdown("Upload one or more ads. Screenshots will be matched automatically f
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
-    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1230, 320, 50)),
-    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1210, 320, 50)),
-    "OneFootball": ("onefootball_sample.jpg", (300, 250), (60, 570, 300, 250)),
-    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 620, 300, 250))
+    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1242, 320, 50)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1242, 320, 50)),
+    "OneFootball": ("onefootball_sample.jpg", (300, 250), (42, 880, 536, 438)),
+    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 600, 300, 250))
 }
 
 screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
@@ -27,7 +27,6 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
     with ZipFile(zip_buffer, "w") as zipf:
         for ad_file in ad_files:
             ad_img = Image.open(ad_file).convert("RGBA")
-            ad_w, ad_h = ad_img.size
             ad_base_name = Path(ad_file.name).stem
 
             for ss in screenshot_files:
@@ -36,15 +35,10 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 expected_tuple = expected_size_map.get(ss_name, None)
                 if not expected_tuple:
                     continue
-                expected_size, rect = expected_tuple
+                _, rect = expected_tuple
                 x, y, w, h = rect
 
-                if abs(ad_w - expected_size[0]) > 20 or abs(ad_h - expected_size[1]) > 20:
-                    st.info(f"⚠️ {ss_name} skipped for {ad_base_name} — ad size {ad_w}x{ad_h} doesn't match expected {expected_size[0]}x{expected_size[1]}")
-                    continue
-
                 debug_base = base.copy()
-                ImageDraw.Draw(debug_base).rectangle([x, y, x + w, y + h], outline="red", width=2)
                 resized_ad = ad_img.resize((w, h), Image.LANCZOS)
                 debug_base.alpha_composite(resized_ad, dest=(x, y))
 
