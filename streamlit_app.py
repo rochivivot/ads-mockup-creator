@@ -12,10 +12,12 @@ st.markdown("Upload one or more ads. Screenshots will be matched automatically f
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
-    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1226, 522, 81)),
-    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (52, 1290, 544, 89)),
+    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1220, 520, 78)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1292, 530, 85)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (54, 715, 498, 416)),
-    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 600, 300, 250))
+    "PLAYit": ("playit_sample.jpg", (300, 250), (60, 600, 300, 250)),
+    "Weather_300x250": ("weather 300x250.jpg", (300, 250), (60, 730, 300, 250)),
+    "Interstitial": ("interstitial_sample.jpg", (320, 480), (48, 180, 320, 480))
 }
 
 screenshot_files = [Path(f"static/{p[0]}") for p in stored_paths.values() if Path(f"static/{p[0]}").exists()]
@@ -48,6 +50,14 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 resized_ad = ad_img.resize((w, h), Image.LANCZOS)
                 debug_base = base.copy()
                 debug_base.alpha_composite(resized_ad, dest=(x, y))
+
+                # Add X icon to Interstitial ad
+                if ss_name == "interstitial_sample.jpg":
+                    draw = ImageDraw.Draw(debug_base)
+                    x_icon_box = [(x + w - 36, y), (x + w - 4, y + 32)]
+                    draw.ellipse(x_icon_box, fill=(255, 255, 255, 230), outline="black")
+                    draw.line((x + w - 30, y + 8, x + w - 10, y + 28), fill="black", width=2)
+                    draw.line((x + w - 30, y + 28, x + w - 10, y + 8), fill="black", width=2)
 
                 label = f"{ad_base_name} on {ss_name}"
                 previews.append((label, debug_base))
