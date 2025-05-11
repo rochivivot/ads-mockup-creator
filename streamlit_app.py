@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from pathlib import Path
 
 st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
-st.title("\ud83d\udcf1 Ad Mockup Creator")
+st.title("Ad Mockup Creator")
 st.markdown("Upload one or more ads. Screenshots will be matched automatically from Jampp templates.")
 
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
@@ -45,6 +45,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     continue
 
                 x, y, w, h = rect
+                # Stretch to fit full ad slot (not preserving aspect ratio)
                 resized_ad = ad_img.resize((w, h), Image.LANCZOS)
 
                 debug_base = base.copy()
@@ -58,12 +59,12 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 zipf.writestr(f"mockup_{label}.jpg", buffer.getvalue())
 
     if previews:
-        st.subheader("\ud83d\udd0d Previews")
+        st.subheader("Previews")
         col1, col2 = st.columns(2)
         for i, (name, img) in enumerate(previews):
             (col1 if i % 2 == 0 else col2).image(img, caption=name, use_container_width=True)
 
-        st.subheader("\ud83d\udce6 Download All Mockups")
+        st.subheader("Download All Mockups")
         st.download_button("Download ZIP", data=zip_buffer.getvalue(), file_name="mockups.zip")
     else:
-        st.warning("\u26a0\ufe0f No valid mockups generated.")
+        st.warning("No valid mockups generated.")
