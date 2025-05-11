@@ -6,14 +6,14 @@ from zipfile import ZipFile
 from pathlib import Path
 
 st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
-st.title("📱 Ad Mockup Creator")
+st.title("\ud83d\udcf1 Ad Mockup Creator")
 st.markdown("Upload one or more ads. Screenshots will be matched automatically from Jampp templates.")
 
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
-    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1242, 320, 50)),
-    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1280, 320, 50)),  # updated y-coordinate
+    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1242, 514, 78)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1302, 514, 78)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (54, 715, 498, 416)),
     "PLAYit": ("playit_sample.jpg", (300, 250), (60, 600, 300, 250))
 }
@@ -45,22 +45,10 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     continue
 
                 x, y, w, h = rect
-                aspect_ratio = ad_img.width / ad_img.height
-                target_ratio = w / h
-
-                if aspect_ratio > target_ratio:
-                    new_width = w
-                    new_height = int(w / aspect_ratio)
-                else:
-                    new_height = h
-                    new_width = int(h * aspect_ratio)
-
-                resized_ad = ad_img.resize((new_width, new_height), Image.LANCZOS)
-                offset_x = x + (w - new_width) // 2
-                offset_y = y + (h - new_height) // 2
+                resized_ad = ad_img.resize((w, h), Image.LANCZOS)
 
                 debug_base = base.copy()
-                debug_base.alpha_composite(resized_ad, dest=(offset_x, offset_y))
+                debug_base.alpha_composite(resized_ad, dest=(x, y))
 
                 label = f"{ad_base_name} on {ss_name}"
                 previews.append((label, debug_base))
@@ -70,12 +58,12 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 zipf.writestr(f"mockup_{label}.jpg", buffer.getvalue())
 
     if previews:
-        st.subheader("🔍 Previews")
+        st.subheader("\ud83d\udd0d Previews")
         col1, col2 = st.columns(2)
         for i, (name, img) in enumerate(previews):
             (col1 if i % 2 == 0 else col2).image(img, caption=name, use_container_width=True)
 
-        st.subheader("📦 Download All Mockups")
+        st.subheader("\ud83d\udce6 Download All Mockups")
         st.download_button("Download ZIP", data=zip_buffer.getvalue(), file_name="mockups.zip")
     else:
-        st.warning("⚠️ No valid mockups generated.")
+        st.warning("\u26a0\ufe0f No valid mockups generated.")
