@@ -12,8 +12,8 @@ st.markdown("Upload one or more ads. Screenshots will be matched automatically f
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
-    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1242, 514, 78)),
-    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1302, 514, 78)),
+    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1242, 520, 82)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1302, 520, 82)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (54, 715, 498, 416)),
     "PLAYit": ("playit_sample.jpg", (300, 250), (60, 600, 300, 250))
 }
@@ -45,9 +45,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     continue
 
                 x, y, w, h = rect
-                # Stretch to fit full ad slot (not preserving aspect ratio)
                 resized_ad = ad_img.resize((w, h), Image.LANCZOS)
-
                 debug_base = base.copy()
                 debug_base.alpha_composite(resized_ad, dest=(x, y))
 
