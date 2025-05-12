@@ -12,7 +12,7 @@ st.markdown("Upload one or more ads. Screenshots will be matched automatically f
 ad_files = st.file_uploader("Upload ad images (PNG or JPG or GIF)", type=["png", "jpg", "jpeg", "gif"], accept_multiple_files=True)
 
 stored_paths = {
-    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1224, 520, 78)),
+    "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1226, 520, 78)),
     "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1292, 530, 85)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (60, 715, 498, 416)),
     "PLAYit": ("playit_sample.jpg", (300, 250), (35, 580, 450, 375)),
