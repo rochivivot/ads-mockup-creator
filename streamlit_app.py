@@ -76,5 +76,5 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
         st.subheader("Download All Mockups")
         st.download_button("Download ZIP", data=zip_buffer.getvalue(), file_name="mockups.zip")
     else:
-        st.warning("⚠️ No valid mockups generated. \n\nOnly the following ad sizes are currently supported for mockups:\n"
+        st.warning("⚠️ No valid mockups generated. \n\nOnly jpg. and the following ad sizes are currently supported for mockups:\n"
     "- 320×50\n- 300×250\n- 320×480")
