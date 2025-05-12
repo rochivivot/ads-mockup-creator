@@ -13,7 +13,7 @@ ad_files = st.file_uploader("Upload ad images (PNG or JPG or GIF)", type=["png",
 
 stored_paths = {
     "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1226, 520, 80)),
-    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1292, 528, 83)),
+    "Weather_Banner": ("weather_banner_sample.jpg", (320, 50), (60, 1292, 544, 85)),
     "OneFootball": ("onefootball_sample.jpg", (300, 250), (60, 715, 498, 416)),
     "PLAYit": ("playit_sample.jpg", (300, 250), (35, 580, 450, 375)),
     "Weather_300x250": ("weather_300x250_sample.jpg", (300, 250), (60, 430, 416, 346)),
