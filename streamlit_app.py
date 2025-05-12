@@ -9,7 +9,7 @@ st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
 st.title("Ad Mockup Creator")
 st.markdown("Upload one or more ads. Screenshots will be matched automatically from Jampp templates.")
 
-ad_files = st.file_uploader("Upload ad images (PNG or JPG or GIF)", type=["png", "jpg", "jpeg", "gif"], accept_multiple_files=True)
+ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
     "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1226, 520, 80)),
