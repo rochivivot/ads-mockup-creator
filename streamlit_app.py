@@ -54,9 +54,9 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                 # Add X icon to Interstitial ad
                 if ss_name == "interstitial_sample.jpg":
                     draw = ImageDraw.Draw(debug_base)
-                    x_icon_y_offset = 10  # Lower the X icon
+                    x_icon_y_offset = 6  # Slightly higher
                     x_icon_box = [(x + w - 36, y + x_icon_y_offset), (x + w - 4, y + x_icon_y_offset + 32)]
-                    draw.ellipse(x_icon_box, fill=(255, 255, 255, 0), outline="black")
+                    draw.ellipse(x_icon_box, fill=None, outline="black")
                     draw.line((x + w - 30, y + x_icon_y_offset + 8, x + w - 10, y + x_icon_y_offset + 28), fill="black", width=2)
                     draw.line((x + w - 30, y + x_icon_y_offset + 28, x + w - 10, y + x_icon_y_offset + 8), fill="black", width=2)
 
