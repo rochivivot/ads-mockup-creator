@@ -9,7 +9,7 @@ st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
 st.title("Ad Mockup Creator")
 st.markdown("Upload one or more ads. Screenshots will be matched automatically from Jampp templates.")
 
-ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg", "gif"], accept_multiple_files=True)
+ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 stored_paths = {
     "Sudoku": ("sudoku_sample.jpg", (320, 50), (60, 1226, 520, 80)),
@@ -31,12 +31,7 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
     zip_buffer = BytesIO()
     with ZipFile(zip_buffer, "w") as zipf:
         for ad_file in ad_files:
-            ad_img = Image.open(ad_file)
-            ad_format = ad_img.format
-            if ad_format == "GIF":
-                st.warning(f"⚠️ {ad_file.name} is a GIF. We only support static JPG and PNG.")
-                continue
-
+            ad_img = Image.open(ad_file).convert("RGBA")
             ad_size = detect_ad_size(ad_img)
             ad_base_name = Path(ad_file.name).stem
 
@@ -48,29 +43,38 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     continue
 
                 expected_ad_size, rect = expected_tuple
-                expected_w, expected_h = expected_ad_size
-
-                # Support retina 2x ads (e.g. 640x960)
-                if ad_size == expected_ad_size:
-                    pass
-                elif ad_size == (expected_w * 2, expected_h * 2):
-                    ad_img = ad_img.resize((expected_w, expected_h), Image.LANCZOS)
-                else:
+                if ad_size != expected_ad_size:
                     continue
 
-                ad_img = ad_img.convert("RGBA")
                 x, y, w, h = rect
                 resized_ad = ad_img.resize((w, h), Image.LANCZOS)
                 debug_base = base.copy()
                 debug_base.alpha_composite(resized_ad, dest=(x, y))
 
-                # Add small transparent X for interstitials
+                # Add X icon to Interstitial ad
                 if ss_name == "interstitial_sample.jpg":
                     draw = ImageDraw.Draw(debug_base)
-                    x_icon_y_offset = 2
-                    circle_left = x + w - 30
-                    circle_top = y + x_icon_y_offset
-                    circle_right = x + w - 10
-                    circle_bottom = y + x_icon_y_offset + 20
-                    x_icon_box = [(circle_left, circle_top), (circle_right, circle_bottom)]
-                    draw.ellipse(x_icon_box)
+                    x_icon_y_offset = 6  # Slightly higher
+                    x_icon_box = [(x + w - 36, y + x_icon_y_offset), (x + w - 4, y + x_icon_y_offset + 32)]
+                    draw.ellipse(x_icon_box, fill=None, outline="black")
+                    draw.line((x + w - 30, y + x_icon_y_offset + 8, x + w - 10, y + x_icon_y_offset + 28), fill="black", width=2)
+                    draw.line((x + w - 30, y + x_icon_y_offset + 28, x + w - 10, y + x_icon_y_offset + 8), fill="black", width=2)
+
+                label = f"{ad_base_name} on {ss_name}"
+                previews.append((label, debug_base))
+
+                buffer = BytesIO()
+                debug_base.convert("RGB").save(buffer, format="JPEG")
+                zipf.writestr(f"mockup_{label}.jpg", buffer.getvalue())
+
+    if previews:
+        st.subheader("Previews")
+        col1, col2 = st.columns(2)
+        for i, (name, img) in enumerate(previews):
+            (col1 if i % 2 == 0 else col2).image(img, caption=name, use_container_width=True)
+
+        st.subheader("Download All Mockups")
+        st.download_button("Download ZIP", data=zip_buffer.getvalue(), file_name="mockups.zip")
+    else:
+        st.warning("⚠️ No valid mockups generated. \n\nOnly jpg. and the following ad sizes are currently supported for mockups:\n"
+    "- 320×50\n- 300×250\n- 320×480")
