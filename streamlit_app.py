@@ -43,9 +43,21 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     continue
 
                 expected_ad_size, rect = expected_tuple
-                if ad_size != expected_ad_size:
+                expected_w, expected_h = expected_ad_size
+
+                # Support retina 2x ads (e.g. 640x960)
+                if ad_size == expected_ad_size:
+                    pass
+                elif ad_size == (expected_w * 2, expected_h * 2):
+                    ad_img = ad_img.resize((expected_w, expected_h), Image.LANCZOS)
+                else:
                     continue
 
+                ad_img = ad_img.convert("RGBA")
+                x, y, w, h = rect
+                resized_ad = ad_img.resize((w, h), Image.LANCZOS)
+                debug_base = base.copy()
+                debug_base.alpha_composite(resized_ad, dest=(x, y))
                 x, y, w, h = rect
                 resized_ad = ad_img.resize((w, h), Image.LANCZOS)
                 debug_base = base.copy()
