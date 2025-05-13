@@ -73,4 +73,4 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
                     circle_right = x + w - 10
                     circle_bottom = y + x_icon_y_offset + 20
                     x_icon_box = [(circle_left, circle_top), (circle_right, circle_bottom)]
-                    draw.ellipse(x_icon_box
+                    draw.ellipse(x_icon_box)
