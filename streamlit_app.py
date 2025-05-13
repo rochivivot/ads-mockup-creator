@@ -33,6 +33,12 @@ if ad_files and screenshot_files and st.button("Generate Mockups"):
         for ad_file in ad_files:
             ad_img = Image.open(ad_file).convert("RGBA")
             ad_size = detect_ad_size(ad_img)
+            if ad_size != expected_ad_size:
+                    pass  # Perfect match
+                elif ad_size == (expected_w * 2, expected_h * 2):
+                    ad_img = ad_img.resize((expected_w, expected_h), Image.LANCZOS)  # Downscale retina
+                else:
+                    continue  # Skip unrelated sizes
             ad_base_name = Path(ad_file.name).stem
 
             for ss in screenshot_files:
