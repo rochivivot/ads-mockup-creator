@@ -1,6 +1,6 @@
-# Ad Mockup Creator
+# Jampp Ad Mockup Creator
 
-Upload one ad and multiple screenshots with red rectangles where ads should go.
+Upload one ad and multiple screenshots.
 Preview overlays and download final mockups.
 
 ## Run locally
