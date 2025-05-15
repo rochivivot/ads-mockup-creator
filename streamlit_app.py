@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from pathlib import Path
 
 st.set_page_config(page_title="Ad Mockup Creator", layout="centered")
-st.title("Ad Mockup Creator")
+st.title("Jampp Ad Mockup Creator")
 st.markdown("Upload one or more ads. Screenshots will be matched automatically from Jampp templates.")
 
 ad_files = st.file_uploader("Upload ad images (PNG or JPG)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
